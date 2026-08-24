@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ "Modifier une publicité" if advertisement else "Ajouter une publicité" }} — Israël Inside
+{% endblock %}
+
+{% block content %}
+<section class="form-section">
+    <div class="container">
+        <div class="form-card">
+            <span class="section-label">ADMINISTRATION</span>
+            <h1>{{ "Modifier la publicité" if advertisement else "Ajouter une publicité" }}</h1>
+
+            <form method="POST" class="job-form">
+                <label>
+                    Nom de la société *
+                    <input type="text" name="company_name" required value="{{ advertisement.company_name if advertisement else '' }}">
+                </label>
+
+                <label>
+                    Nom et prénom *
+                    <input type="text" name="professional_name" required value="{{ advertisement.professional_name if advertisement else '' }}">
+                </label>
+
+                <label>
+                    Domaine d'activité *
+                    <input type="text" name="activity" required placeholder="Avocate, médecin, immobilier..." value="{{ advertisement.activity if advertisement else '' }}">
+                </label>
+
+                <label>
+                    Spécialité
+                    <input type="text" name="specialty" placeholder="Droit immobilier, pédiatrie..." value="{{ advertisement.specialty if advertisement else '' }}">
+                </label>
+
+                <label>
+                    Adresse
+                    <input type="text" name="address" value="{{ advertisement.address if advertisement else '' }}">
+                </label>
+
+                <label>
+                    Téléphone
+                    <input type="text" name="phone" value="{{ advertisement.phone if advertisement else '' }}">
+                </label>
+
+                <label>
+                    Email
+                    <input type="email" name="email" value="{{ advertisement.email if advertisement else '' }}">
+                </label>
+
+                <label>
+                    Site internet
+                    <input type="url" name="website" placeholder="https://..." value="{{ advertisement.website if advertisement else '' }}">
+                </label>
+
+                <label>
+                    Icône
+                    <input type="text" name="icon" maxlength="20" value="{{ advertisement.icon if advertisement else '💼' }}">
+                </label>
+
+                <label>
+                    Description courte
+                    <textarea name="description" rows="4" maxlength="350">{{ advertisement.description if advertisement else '' }}</textarea>
+                </label>
+
+                <label>
+                    Ordre d'affichage
+                    <input type="number" name="display_order" value="{{ advertisement.display_order if advertisement else 0 }}">
+                </label>
+
+                <label class="checkbox-row">
+                    <input type="checkbox" name="published" {% if not advertisement or advertisement.published %}checked{% endif %}>
+                    Publier immédiatement
+                </label>
+
+                <div class="form-actions">
+                    <button type="submit" class="primary-button">Enregistrer</button>
+                    <a href="{{ url_for('admin') }}" class="secondary-button">Annuler</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

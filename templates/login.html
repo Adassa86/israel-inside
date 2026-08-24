@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Connexion Admin{% endblock %}
+
+{% block content %}
+
+<section class="form-section">
+    <div class="form-card">
+
+        <h1>Connexion administrateur</h1>
+
+        <p class="form-intro">
+            Connectez-vous pour accéder à l'administration.
+        </p>
+
+        <form method="POST" class="job-form">
+
+            <label>
+                Nom d'utilisateur
+                <input
+                    type="text"
+                    name="username"
+                    required
+                >
+            </label>
+
+            <label>
+                Mot de passe
+                <input
+                    type="password"
+                    name="password"
+                    required
+                >
+            </label>
+
+            <button class="primary-button" type="submit">
+                Se connecter
+            </button>
+
+        </form>
+
+    </div>
+</section>
+
+{% endblock %}

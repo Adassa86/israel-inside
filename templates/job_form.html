@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block title %}{{ "Modifier" if job else "Ajouter" }} une offre — Israël Inside{% endblock %}
+
+{% block content %}
+<section class="form-section">
+    <div class="container">
+        <div class="form-card">
+            <span class="kicker orange">ADMINISTRATION</span>
+            <h1>{{ "Modifier l'offre" if job else "Créer une offre" }}</h1>
+            <p class="form-intro">
+                Remplissez les informations qui seront affichées sur le ticket.
+            </p>
+
+            <form method="post" class="job-form">
+                <div class="two-columns">
+                    <label>
+                        Numéro du poste *
+                        <input name="reference" required
+                               value="{{ job.reference if job else '' }}"
+                               placeholder="Exemple : 29319">
+                    </label>
+
+                    <label>
+                        Titre du poste *
+                        <input name="title" required
+                               value="{{ job.title if job else '' }}"
+                               placeholder="Exemple : Responsable de site">
+                    </label>
+                </div>
+
+                <div class="two-columns">
+                    <label>
+                        Ville *
+                        <input name="city" required
+                               value="{{ job.city if job else '' }}"
+                               placeholder="Exemple : Haïfa">
+                    </label>
+
+                    <label>
+                        Type de poste
+                        <input name="contract_type"
+                               value="{{ job.contract_type if job else '' }}"
+                               placeholder="Temps plein">
+                    </label>
+                </div>
+
+                <label>
+                    Horaires
+                    <input name="schedule"
+                           value="{{ job.schedule if job else '' }}"
+                           placeholder="Dimanche à jeudi, 8 h à 17 h">
+                </label>
+
+                <div class="two-columns">
+                    <label>
+                        Niveau d'hébreu
+                        <input name="hebrew_level"
+                               value="{{ job.hebrew_level if job else '' }}"
+                               placeholder="Bon niveau requis">
+                    </label>
+
+                    <label>
+                        Expérience
+                        <input name="experience"
+                               value="{{ job.experience if job else '' }}"
+                               placeholder="Débutant accepté">
+                    </label>
+                </div>
+
+                <label>
+                    Mission *
+                    <textarea name="description" rows="5" required
+                              placeholder="Décrivez les missions principales...">{{ job.description if job else '' }}</textarea>
+                </label>
+
+                <label>
+                    Profil recherché
+                    <textarea name="requirements" rows="5"
+                              placeholder="Une exigence par ligne...">{{ job.requirements if job else '' }}</textarea>
+                </label>
+
+                <label>
+                    Avantages
+                    <textarea name="advantages" rows="4"
+                              placeholder="Un avantage par ligne...">{{ job.advantages if job else '' }}</textarea>
+                </label>
+
+                <div class="two-columns">
+                    <label class="checkbox-row">
+                        <input
+                            type="checkbox"
+                            name="shuttle_available"
+                            {% if job and job.shuttle_available %}checked{% endif %}
+                        >
+                        Navette disponible pour les salariés
+                    </label>
+
+                    <label>
+                        Villes desservies par la navette
+                        <input
+                            type="text"
+                            name="shuttle_cities"
+                            value="{{ job.shuttle_cities if job else '' }}"
+                            placeholder="Ashdod, Ashkelon, Yavne"
+                        >
+                    </label>
+                </div>
+
+                <p class="form-intro">
+                    Pour plusieurs villes, séparez-les par des virgules.
+                </p>
+
+                <label>
+                    Lien du formulaire de candidature *
+                    <input name="form_link" type="url" required
+                           value="{{ job.form_link if job else '' }}"
+                           placeholder="https://forms.gle/...">
+                </label>
+
+                <label class="checkbox-row">
+                    <input type="checkbox" name="published"
+                           {% if not job or job.published %}checked{% endif %}>
+                    Publier immédiatement
+                </label>
+
+                <div class="form-actions">
+                    <button class="primary-button" type="submit">
+                        {{ "Enregistrer" if job else "Créer l'offre" }}
+                    </button>
+                    <a class="secondary-button" href="{{ url_for('admin') }}">Annuler</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

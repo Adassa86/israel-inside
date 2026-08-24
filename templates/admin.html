@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}Administration — Israël Inside{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="container">
+        <div class="section-title admin-heading">
+            <div>
+                <span class="kicker orange">ADMINISTRATION PRIVÉE</span>
+                <h1>Gestion du site</h1>
+            </div>
+
+            <div class="admin-actions">
+                <a class="primary-button" href="{{ url_for('create_job') }}">Nouvelle offre</a>
+                <a class="primary-button" href="{{ url_for('import_jobs') }}">Importer des annonces</a>
+                <a class="primary-button" href="{{ url_for('create_advertisement') }}">Ajouter une publicité</a>
+                <a class="secondary-button" href="{{ url_for('logout') }}">Déconnexion</a>
+            </div>
+        </div>
+
+        <div class="section-title">
+            <span class="kicker orange">OFFRES D'EMPLOI</span>
+            <h2>{{ jobs|length }} offre{{ 's' if jobs|length != 1 else '' }}</h2>
+        </div>
+
+        <div class="admin-list">
+            {% for job in jobs %}
+            <article class="admin-card">
+                <div>
+                    <div class="admin-card-title">
+                        <span class="reference">Poste n°{{ job.reference }}</span>
+                        <span class="status {{ 'published' if job.published else 'hidden' }}">
+                            {{ 'Publiée' if job.published else 'Masquée' }}
+                        </span>
+                    </div>
+                    <h2>{{ job.title }}</h2>
+                    <p>{{ job.city }}</p>
+                </div>
+
+                <div class="admin-actions">
+                    <a class="small-button" href="{{ url_for('edit_job', job_id=job.id) }}">Modifier</a>
+                    <form method="post" action="{{ url_for('toggle_job', job_id=job.id) }}">
+                        <button class="small-button" type="submit">{{ 'Masquer' if job.published else 'Publier' }}</button>
+                    </form>
+                    <form method="post" action="{{ url_for('delete_job', job_id=job.id) }}" onsubmit="return confirm('Supprimer définitivement cette offre ?');">
+                        <button class="small-button danger" type="submit">Supprimer</button>
+                    </form>
+                </div>
+            </article>
+            {% else %}
+            <div class="empty">
+                <h3>Aucune offre enregistrée</h3>
+                <p>Ajoutez une offre manuellement ou utilisez l'import.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="section-title" style="margin-top: 60px;">
+            <span class="kicker orange">PUBLICITÉS</span>
+            <h2>{{ advertisements|length }} publicité{{ 's' if advertisements|length != 1 else '' }}</h2>
+        </div>
+
+        <div class="admin-list">
+            {% for advertisement in advertisements %}
+            <article class="admin-card">
+                <div>
+                    <div class="admin-card-title">
+                        <span class="reference">{{ advertisement.company_name }}</span>
+                        <span class="status {{ 'published' if advertisement.published else 'hidden' }}">
+                            {{ 'Publiée' if advertisement.published else 'Masquée' }}
+                        </span>
+                    </div>
+                    <h2>{{ advertisement.professional_name }}</h2>
+                    <p>{{ advertisement.activity }}{% if advertisement.specialty %} — {{ advertisement.specialty }}{% endif %}</p>
+                </div>
+
+                <div class="admin-actions">
+                    <a class="small-button" href="{{ url_for('edit_advertisement', advertisement_id=advertisement.id) }}">Modifier</a>
+                    <form method="post" action="{{ url_for('toggle_advertisement', advertisement_id=advertisement.id) }}">
+                        <button class="small-button" type="submit">{{ 'Masquer' if advertisement.published else 'Publier' }}</button>
+                    </form>
+                    <form method="post" action="{{ url_for('delete_advertisement', advertisement_id=advertisement.id) }}" onsubmit="return confirm('Supprimer définitivement cette publicité ?');">
+                        <button class="small-button danger" type="submit">Supprimer</button>
+                    </form>
+                </div>
+            </article>
+            {% else %}
+            <div class="empty">
+                <h3>Aucune publicité enregistrée</h3>
+                <p>Utilisez le bouton « Ajouter une publicité ».</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

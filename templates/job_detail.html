@@ -1,0 +1,343 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ job.title }} | Israël Inside
+{% endblock %}
+
+{% block content %}
+
+<section class="detail-page">
+
+<div class="container">
+
+<a href="{{ url_for('index') }}" class="back-link">
+← Retour aux offres
+</a>
+
+<div class="job-header">
+
+<div>
+
+<h1>{{ job.title }}</h1>
+
+<p class="city">
+📍 {{ job.city }}
+</p>
+
+<div class="badges">
+
+{% if job.contract_type %}
+<span>{{ job.contract_type }}</span>
+{% endif %}
+
+{% if job.schedule %}
+<span>🕒 {{ job.schedule }}</span>
+{% endif %}
+
+{% if job.hebrew_level %}
+<span>🇮🇱 {{ job.hebrew_level }}</span>
+{% endif %}
+
+{% if job.experience %}
+<span>💼 {{ job.experience }}</span>
+{% endif %}
+
+{% if job.shuttle_available %}
+<span>
+🚌 Navette{% if job.shuttle_cities %} depuis {{ job.shuttle_cities }}{% endif %}
+</span>
+{% endif %}
+
+</div>
+
+</div>
+
+<a
+class="apply-button"
+href="{{ job.form_link }}"
+target="_blank">
+
+POSTULER →
+
+</a>
+
+</div>
+
+<div class="content-grid">
+
+<div class="main-content">
+
+<div class="card">
+
+<h2>Votre mission</h2>
+
+<p style="white-space:pre-line;">
+{{ job.description }}
+</p>
+
+</div>
+
+{% if job.requirements %}
+
+<div class="card">
+
+<h2>Profil recherché</h2>
+
+<p style="white-space:pre-line;">
+{{ job.requirements }}
+</p>
+
+</div>
+
+{% endif %}
+
+{% if job.advantages %}
+
+<div class="card">
+
+<h2>Avantages</h2>
+
+<p style="white-space:pre-line;">
+{{ job.advantages }}
+</p>
+
+</div>
+
+{% endif %}
+
+</div>
+
+<div class="sidebar">
+
+<div class="card">
+
+<h3>Informations</h3>
+
+<p><strong>Référence :</strong><br>{{ job.reference }}</p>
+
+<p><strong>Ville :</strong><br>{{ job.city }}</p>
+
+{% if job.schedule %}
+<p><strong>Horaires :</strong><br>{{ job.schedule }}</p>
+{% endif %}
+
+{% if job.contract_type %}
+<p><strong>Contrat :</strong><br>{{ job.contract_type }}</p>
+{% endif %}
+
+{% if job.shuttle_available %}
+<p>
+<strong>Navette :</strong><br>
+Disponible{% if job.shuttle_cities %} depuis {{ job.shuttle_cities }}{% endif %}
+</p>
+{% endif %}
+
+</div>
+
+{% if similar_jobs %}
+
+<div class="card">
+
+<h3>Autres offres</h3>
+
+{% for similar in similar_jobs %}
+
+<a
+class="similar-job"
+href="{{ url_for('job_detail',job_id=similar.id) }}">
+
+<strong>{{ similar.title }}</strong>
+
+<br>
+
+{{ similar.city }}
+
+</a>
+
+{% endfor %}
+
+</div>
+
+{% endif %}
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<style>
+
+.detail-page{
+
+padding:70px 0;
+
+}
+
+.back-link{
+
+display:inline-block;
+
+margin-bottom:25px;
+
+font-weight:bold;
+
+color:#0077cc;
+
+}
+
+.job-header{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+gap:30px;
+
+margin-bottom:40px;
+
+}
+
+.job-header h1{
+
+font-size:46px;
+
+margin-bottom:10px;
+
+}
+
+.city{
+
+font-size:20px;
+
+color:#666;
+
+}
+
+.badges{
+
+display:flex;
+
+flex-wrap:wrap;
+
+gap:10px;
+
+margin-top:20px;
+
+}
+
+.badges span{
+
+background:#eef7ff;
+
+padding:8px 15px;
+
+border-radius:30px;
+
+font-weight:bold;
+
+}
+
+.apply-button{
+
+background:#ffb300;
+
+padding:18px 35px;
+
+border-radius:14px;
+
+font-weight:bold;
+
+color:black;
+
+text-decoration:none;
+
+font-size:20px;
+
+}
+
+.content-grid{
+
+display:grid;
+
+grid-template-columns:2fr 1fr;
+
+gap:35px;
+
+}
+
+.card{
+
+background:white;
+
+padding:30px;
+
+border-radius:20px;
+
+box-shadow:0 15px 35px rgba(0,0,0,.08);
+
+margin-bottom:25px;
+
+}
+
+.card h2{
+
+margin-bottom:20px;
+
+}
+
+.card h3{
+
+margin-bottom:20px;
+
+}
+
+.similar-job{
+
+display:block;
+
+padding:15px;
+
+border-radius:12px;
+
+background:#f7f7f7;
+
+margin-bottom:12px;
+
+text-decoration:none;
+
+color:#222;
+
+}
+
+.similar-job:hover{
+
+background:#eaf6ff;
+
+}
+
+@media(max-width:900px){
+
+.content-grid{
+
+grid-template-columns:1fr;
+
+}
+
+.job-header{
+
+flex-direction:column;
+
+align-items:flex-start;
+
+}
+
+}
+
+</style>
+
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}
+Résultat de l'import — Israël Inside
+{% endblock %}
+
+{% block content %}
+
+<section class="form-section">
+    <div class="container">
+
+        <div class="form-card">
+
+            <span class="section-label">
+                IMPORT TERMINÉ
+            </span>
+
+            <h1>Résultat de l’import</h1>
+
+            <div class="import-summary">
+
+                <p>
+                    <strong>{{ detected_count }}</strong>
+                    annonce(s) détectée(s)
+                </p>
+
+                <p>
+                    <strong>{{ imported_count }}</strong>
+                    offre(s) importée(s)
+                </p>
+
+                <p>
+                    <strong>{{ duplicate_count }}</strong>
+                    doublon(s) ignoré(s)
+                </p>
+
+            </div>
+
+            {% if errors %}
+
+            <div class="import-errors">
+                <h2>Erreurs rencontrées</h2>
+
+                <ul>
+                    {% for error in errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            {% endif %}
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('index') }}"
+                    class="primary-button"
+                >
+                    Voir les offres
+                </a>
+
+                <a
+                    href="{{ url_for('import_jobs') }}"
+                    class="secondary-button"
+                >
+                    Nouvel import
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

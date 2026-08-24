@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}
+Import massif — Israël Inside
+{% endblock %}
+
+{% block content %}
+
+<section class="form-section">
+    <div class="container">
+
+        <div class="form-card">
+
+            <span class="section-label">
+                IMPORT INTELLIGENT
+            </span>
+
+            <h1>Importer plusieurs annonces</h1>
+
+            <p class="form-intro">
+                Collez toutes les annonces en hébreu.
+                Chaque numéro de poste permettra de créer
+                automatiquement un ticket séparé.
+            </p>
+
+            <form method="POST" class="job-form">
+
+                <label>
+                    Annonces à analyser
+
+                    <textarea
+                        name="bulk_text"
+                        rows="28"
+                        required
+                        placeholder="Collez ici vos 50 annonces..."
+                    ></textarea>
+                </label>
+
+                <label>
+                    Lien du formulaire de candidature
+
+                    <input
+                        type="url"
+                        name="form_link"
+                        required
+                        placeholder="https://forms.gle/..."
+                    >
+                </label>
+
+                <label class="checkbox-row">
+                    <input
+                        type="checkbox"
+                        name="published"
+                        checked
+                    >
+
+                    Publier immédiatement les offres importées
+                </label>
+
+                <div class="form-actions">
+
+                    <button
+                        type="submit"
+                        class="primary-button"
+                    >
+                        Traduire et importer
+                    </button>
+
+                    <a
+                        href="{{ url_for('admin') }}"
+                        class="secondary-button"
+                    >
+                        Annuler
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

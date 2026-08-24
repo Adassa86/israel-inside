@@ -1,0 +1,24 @@
+VERSION CORRIGÉE — ISRAËL INSIDE
+
+Ce projet conserve exactement la logique de connexion existante :
+- DATABASE_URL si elle est définie ;
+- sinon sqlite:///jobs.db.
+
+Corrections réalisées :
+1. Import OpenAI : le client Python ignore les proxys Windows/VPN défectueux (trust_env=False).
+2. Import massif : taille de formulaire augmentée à 12 Mo pour éviter l'erreur 413.
+3. Chaque offre est enregistrée immédiatement après son analyse.
+4. Administration privée des publicités : ajouter, modifier, masquer et supprimer.
+5. Les publicités publiées s'affichent automatiquement dans la colonne de droite.
+
+TEST LOCAL
+- Ouvrir PowerShell dans ce dossier.
+- Installer/mettre à jour : py -m pip install -r requirements.txt
+- Définir OPENAI_API_KEY et DATABASE_URL dans la même fenêtre si nécessaire.
+- Tester OpenAI : py test_openai_connection.py
+- Lancer : py app.py
+- Ouvrir : http://127.0.0.1:5000/admin
+
+IMPORTANT
+Le bouton d'ajout de publicité n'est visible que dans l'administration après connexion.
+Après le dernier déploiement, les offres et publicités se gèrent depuis /admin sans nouveau git push.
