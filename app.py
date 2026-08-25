@@ -1800,16 +1800,21 @@ def import_jobs():
 
     BATCH_SIZE = 10
 
-    for i in range(0, len(raw_blocks), BATCH_SIZE):
-        batch = raw_blocks[i:i + BATCH_SIZE]
-
-        jobs, errors = analyse_multiple_jobs(batch)
-
-        extracted_jobs.extend(jobs)
-        analysis_errors.extend(errors)
-
     extracted_jobs = []
     analysis_errors = []
+
+    for i in range(0, len(raw_blocks), BATCH_SIZE):
+
+        batch = raw_blocks[i:i + BATCH_SIZE]
+
+        try:
+            jobs, errors = analyse_multiple_jobs(batch)
+
+            extracted_jobs.extend(jobs)
+            analysis_errors.extend(errors)
+
+        except Exception as e:
+            analysis_errors.append(str(e))
 
     for i in range(0, len(raw_blocks), BATCH_SIZE):
 
