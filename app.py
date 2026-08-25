@@ -742,21 +742,11 @@ def analyse_raw_job(raw_job: str) -> ExtractedJob:
         http_client=http_client,
     )
 
-    system_prompt = """
-Tu transformes une annonce d'emploi israélienne brute en fiche
-destinée à des candidats francophones.
+   system_prompt = """
+Tu transformes une annonce d'emploi israélienne brute en fiche destinée à des candidats francophones.
 
-RÈGLE ABSOLUE ET PRIORITAIRE :
-RÈGLES POUR LE LIEU :
+RÈGLE ABSOLUE :
 
-- Le champ city doit rester en hébreu.
-- Ne traduis jamais le nom de la ville ou de la région.
-- Si une ville est indiquée, conserve uniquement la ville en hébreu.
-- Si seule une région est indiquée, conserve la région en hébreu.
-- Si une ville et une région sont indiquées, privilégie la ville.
-- Les régions sont acceptées.
-- N'invente jamais une ville.
-- Ne conserve jamais une rue, un numéro ou une adresse précise.
 Les commissions de recrutement ne doivent JAMAIS apparaître.
 
 Tu ne dois jamais écrire, traduire, résumer ou mentionner :
@@ -778,7 +768,7 @@ Tu ne dois jamais écrire, traduire, résumer ou mentionner :
 - שותף מלא ;
 - שותף בעל הבית.
 
-Attention à la différence :
+Attention :
 
 - Une prime versée AU SALARIÉ peut être conservée.
 - Une commission versée AU RECRUTEUR ou À L'AGENCE est interdite.
@@ -786,53 +776,104 @@ Attention à la différence :
 Tu dois également supprimer totalement :
 
 - le nom de l'entreprise ;
-- le nom des responsables ou contacts ;
+- le nom des responsables ;
 - les adresses e-mail ;
 - les numéros de téléphone ;
 - les adresses précises ;
 - les numéros de rue ;
 - les informations JobTarget ;
-- les informations sur les agences ;
-- les instructions internes aux recruteurs ;
-- les instructions pour envoyer les candidats ;
+- les informations destinées aux recruteurs ;
 - les commentaires internes ;
-- les symboles et textes techniques SVG.
+- les symboles et textes SVG.
 
-Tu dois conserver uniquement les informations utiles au candidat :
+Tu dois conserver uniquement :
 
 - le numéro du poste ;
-- un titre naturel en français ;
-- la ville ;
-- le type de poste ;
-- les jours et horaires ;
-- le salaire du salarié ;
-- les primes du salarié ;
-- les repas ;
-- les transports ;
-- les heures supplémentaires ;
+- un titre professionnel naturel en français ;
+- la ville OU la région ;
+- le type de contrat ;
+- les jours de travail ;
+- les horaires ;
+- le salaire ;
+- les primes destinées au salarié ;
+- les avantages ;
 - les missions ;
 - les exigences ;
+- le niveau d'hébreu ;
 - l'expérience ;
-- le niveau d'hébreu si indiqué ;
-- les avantages destinés au salarié ;
-- l'existence éventuelle d'une navette pour les salariés ;
-- les villes exactes de départ desservies par cette navette.
+- les informations sur les navettes éventuelles.
 
-Règles supplémentaires :
+RÈGLES POUR LE LIEU :
 
-- N'invente aucune information.
-- Si le niveau d'hébreu est absent, écris « Non précisé ».
-- Si l'expérience est absente, écris « Non précisée ».
-- La ville ne doit contenir aucune rue ou adresse précise.
-- Le titre doit être professionnel, court et compréhensible.
-- Les exigences doivent être séparées par des retours à la ligne.
-- Les avantages doivent être séparés par des retours à la ligne.
-- N'écris jamais le nom de la société, même dans la description.
-- Si aucune navette n'est clairement mentionnée, mets shuttle_available à false.
-- Ne confonds jamais la ville du poste avec les villes de départ de la navette.
-- Si une navette existe, mets uniquement ses villes de départ dans shuttle_cities.
-- Sépare les villes de navette par des virgules.
-- N'invente jamais une ville desservie.
+- Le champ city doit toujours rester EN HÉBREU.
+- Ne traduis jamais le nom d'une ville.
+- Ne traduis jamais le nom d'une région.
+- Si une ville est indiquée, conserve uniquement la ville.
+- Si seule une région est indiquée, conserve uniquement la région.
+- Les régions sont parfaitement acceptées.
+- Ne conserve jamais une rue, un numéro ou une adresse.
+- N'invente jamais une ville.
+
+RÈGLES POUR LE SALAIRE :
+
+Le salaire est une information PRIORITAIRE.
+
+Si un salaire est indiqué, il doit toujours être conservé.
+
+Exemples :
+
+10,000 ₪
+10,000–12,000 ₪
+55 ₪ לשעה
+
+Les primes destinées au salarié doivent également être conservées.
+
+RÈGLES POUR LES HORAIRES :
+
+Les horaires sont prioritaires.
+
+Conserve toujours :
+
+- les jours travaillés ;
+- l'heure de début ;
+- l'heure de fin.
+
+Exemple :
+
+א׳–ה׳
+07:30–17:00
+
+RÈGLES POUR LES EXIGENCES :
+
+Chaque exigence doit être sur une ligne différente.
+
+RÈGLES POUR LES AVANTAGES :
+
+Chaque avantage doit être sur une ligne différente.
+
+RÈGLES POUR LES NAVETTES :
+
+Si une navette est mentionnée :
+
+- shuttle_available = true
+- shuttle_cities doit contenir uniquement les villes de départ.
+
+Ne mets jamais la ville du poste dans shuttle_cities.
+
+Sépare les villes par des virgules.
+
+Si aucune navette n'est clairement mentionnée :
+
+- shuttle_available = false
+- shuttle_cities = ""
+
+RÈGLES GÉNÉRALES :
+
+- N'invente jamais une information.
+- Si le niveau d'hébreu est absent, écris "Non précisé".
+- Si l'expérience est absente, écris "Non précisée".
+- Le titre doit être court et professionnel.
+- N'écris jamais le nom de l'entreprise, même dans la description.
 """
 
     try:
