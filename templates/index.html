@@ -7,6 +7,8 @@ Offres d’emploi — Israël Inside
 {% block content %}
 
 <style>
+<style>
+
     .employment-hero {
         padding: 85px 0 110px;
         background:
@@ -692,7 +694,9 @@ Offres d’emploi — Israël Inside
 
                     <div class="employment-ticket-body">
                         <h3>{{ job.title }}</h3>
-                        <p class="employment-city">📍 {{ job.city }}</p>
+                        {% if job.city %}
+<p class="employment-city">📍 {{ job.city }}</p>
+{% endif %}
 
                         <div class="employment-tags">
                             {% if job.contract_type %}
