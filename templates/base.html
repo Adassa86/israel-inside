@@ -38,5 +38,28 @@
         <span>Des opportunités simples à consulter.</span>
     </div>
 </footer>
+<script>
+document.addEventListener("contextmenu", function (e) {
+    e.preventDefault();
+});
+</script>
+<script>
+document.addEventListener("keydown", function(e) {
+
+    if (e.key === "F12") {
+        e.preventDefault();
+    }
+
+    if (e.ctrlKey && e.shiftKey &&
+        (e.key === "I" || e.key === "J" || e.key === "C")) {
+        e.preventDefault();
+    }
+
+    if (e.ctrlKey && e.key.toLowerCase() === "u") {
+        e.preventDefault();
+    }
+
+});
+</script>
 </body>
 </html>
