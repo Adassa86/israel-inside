@@ -247,11 +247,11 @@ class ExtractedJob(BaseModel):
     )
 
     city: str = Field(
-    description=(
-        "Ville ou région du poste exactement en hébreu, "
-        "sans rue ni adresse précise"
-    ),
-)
+        description=(
+            "Ville ou région du poste exactement en hébreu, "
+            "sans rue ni adresse précise"
+        ),
+    )
     contract_type: str = Field(
         default="",
         description="Temps plein, temps partiel ou type de contrat",
@@ -713,7 +713,7 @@ def validate_no_forbidden_content(job: ExtractedJob) -> None:
 # ============================================================
 
 def analyse_raw_job(raw_job: str) -> ExtractedJob:
-    api_key = os.environ.get("OPENAI_API_KEY")
+    api_key = os.environ.get("OPENAI_API_KEY", "").strip()
 
     if not api_key:
         raise RuntimeError(
@@ -742,7 +742,7 @@ def analyse_raw_job(raw_job: str) -> ExtractedJob:
         http_client=http_client,
     )
 
-   system_prompt = """
+    system_prompt = """
 Tu transformes une annonce d'emploi israélienne brute en fiche destinée à des candidats francophones.
 
 RÈGLE ABSOLUE :
@@ -790,7 +790,7 @@ Tu dois conserver uniquement :
 
 - le numéro du poste ;
 - un titre professionnel naturel en français ;
-- la ville OU la région ;
+- la ville OU la région, conservée en hébreu ;
 - le type de contrat ;
 - les jours de travail ;
 - les horaires ;
@@ -919,7 +919,12 @@ RÈGLES GÉNÉRALES :
         result.reference = detected_reference
 
     # Nettoyage final de tous les champs.
+    result.title = sanitize_public_text(result.title)
     result.city = sanitize_public_text(result.city)
+    result.contract_type = sanitize_public_text(
+        result.contract_type
+    )
+    result.schedule = sanitize_public_text(result.schedule)
     result.hebrew_level = sanitize_public_text(
         result.hebrew_level
     )
@@ -953,7 +958,7 @@ RÈGLES GÉNÉRALES :
         raise ValueError("Le titre est vide après nettoyage.")
 
     if not result.city:
-      result.city = ""
+        result.city = ""
 
     if not result.description:
         raise ValueError(
@@ -1861,22 +1866,6 @@ def import_jobs():
             analysis_errors.extend(errors)
 
         except Exception as e:
-            analysis_errors.append(str(e))
-
-    for i in range(0, len(raw_blocks), BATCH_SIZE):
-
-        batch = raw_blocks[i:i + BATCH_SIZE]
-
-        try:
-
-            jobs, errors = analyse_multiple_jobs(batch)
-
-            extracted_jobs.extend(jobs)
-
-            analysis_errors.extend(errors)
-
-        except Exception as e:
-
             analysis_errors.append(str(e))
 
     imported_count = 0
