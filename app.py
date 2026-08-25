@@ -1798,7 +1798,15 @@ def import_jobs():
             "import_jobs.html"
         )
 
-    BATCH_SIZE = 50
+    BATCH_SIZE = 10
+
+    for i in range(0, len(raw_blocks), BATCH_SIZE):
+        batch = raw_blocks[i:i + BATCH_SIZE]
+
+        jobs, errors = analyse_multiple_jobs(batch)
+
+        extracted_jobs.extend(jobs)
+        analysis_errors.extend(errors)
 
     extracted_jobs = []
     analysis_errors = []
