@@ -747,7 +747,16 @@ Tu transformes une annonce d'emploi israélienne brute en fiche
 destinée à des candidats francophones.
 
 RÈGLE ABSOLUE ET PRIORITAIRE :
+RÈGLES POUR LE LIEU :
 
+- Le champ city doit rester en hébreu.
+- Ne traduis jamais le nom de la ville ou de la région.
+- Si une ville est indiquée, conserve uniquement la ville en hébreu.
+- Si seule une région est indiquée, conserve la région en hébreu.
+- Si une ville et une région sont indiquées, privilégie la ville.
+- Les régions sont acceptées.
+- N'invente jamais une ville.
+- Ne conserve jamais une rue, un numéro ou une adresse précise.
 Les commissions de recrutement ne doivent JAMAIS apparaître.
 
 Tu ne dois jamais écrire, traduire, résumer ou mentionner :
