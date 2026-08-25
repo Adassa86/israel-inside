@@ -247,9 +247,11 @@ class ExtractedJob(BaseModel):
     )
 
     city: str = Field(
-        description="Ville uniquement, sans adresse",
-    )
-
+    description=(
+        "Ville ou région du poste exactement en hébreu, "
+        "sans rue ni adresse précise"
+    ),
+)
     contract_type: str = Field(
         default="",
         description="Temps plein, temps partiel ou type de contrat",
