@@ -878,12 +878,7 @@ Règles supplémentaires :
         result.reference = detected_reference
 
     # Nettoyage final de tous les champs.
-    result.title = sanitize_public_text(result.title)
     result.city = sanitize_public_text(result.city)
-    result.contract_type = sanitize_public_text(
-        result.contract_type
-    )
-    result.schedule = sanitize_public_text(result.schedule)
     result.hebrew_level = sanitize_public_text(
         result.hebrew_level
     )
