@@ -1078,7 +1078,9 @@ def index():
     if contract:
         query = query.filter(Job.contract_type == contract)
 
-    jobs = query.order_by(Job.created_at.desc()).all()
+    jobs = query.order_by(
+    Job.created_at.desc()
+).limit(30).all()
 
     advertisements = (
         Advertisement.query
