@@ -1169,6 +1169,7 @@ jobs = pagination.items
         selected_search=search,
         selected_city=city,
         selected_contract=contract,
+        pagination=pagination,
     )
 
 
