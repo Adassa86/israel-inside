@@ -805,14 +805,28 @@ Tu dois conserver uniquement :
 
 RÈGLES POUR LE LIEU :
 
-- Le champ city doit toujours rester EN HÉBREU.
+RÈGLES POUR LE LIEU :
+
+- Le champ city doit toujours rester en hébreu.
+- Le champ city peut contenir soit une ville, soit une région.
+- Une région est une localisation valide.
 - Ne traduis jamais le nom d'une ville.
 - Ne traduis jamais le nom d'une région.
 - Si une ville est indiquée, conserve uniquement la ville.
-- Si seule une région est indiquée, conserve uniquement la région.
-- Les régions sont parfaitement acceptées.
-- Ne conserve jamais une rue, un numéro ou une adresse.
-- N'invente jamais une ville.
+- Si seule une région est indiquée, conserve la région.
+- Si une ville et une région sont indiquées, privilégie la ville.
+- Exemples de régions valides :
+  אזור המרכז
+  אזור השרון
+  אזור השפלה
+  ירושלים והסביבה
+  צפון
+  דרום
+  מרכז
+- Si aucune ville ni région n'est présente, laisse le champ vide.
+- N'écris jamais "Non précisé".
+- N'invente jamais une localisation.
+- Ne conserve jamais une rue ou une adresse.
 
 RÈGLES POUR LE SALAIRE :
 
