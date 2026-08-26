@@ -1080,12 +1080,12 @@ def index():
 
     page = request.args.get("page", 1, type=int)
 
-pagination = query.order_by(
-    Job.created_at.desc()
-).paginate(
-    page=page,
-    per_page=20,
-    error_out=False
+    pagination = query.order_by(
+        Job.created_at.desc()
+    ).paginate(
+        page=page,
+        per_page=20,
+        error_out=False
 )
 
 jobs = pagination.items
