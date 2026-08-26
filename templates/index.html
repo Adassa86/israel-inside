@@ -819,3 +819,28 @@ Offres d’emploi — Israël Inside
 </section>
 
 {% endblock %}
+{% if pagination.pages > 1 %}
+
+<div class="pagination">
+
+{% if pagination.has_prev %}
+<a href="{{ url_for('index', page=pagination.prev_num) }}">
+← Précédent
+</a>
+{% endif %}
+
+{% for p in pagination.iter_pages() %}
+    {% if p %}
+        <a href="{{ url_for('index', page=p) }}">{{ p }}</a>
+    {% endif %}
+{% endfor %}
+
+{% if pagination.has_next %}
+<a href="{{ url_for('index', page=pagination.next_num) }}">
+Suivant →
+</a>
+{% endif %}
+
+</div>
+
+{% endif %}
