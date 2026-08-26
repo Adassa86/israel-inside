@@ -793,4 +793,23 @@ footer {
     .footer-inner {
         flex-direction: column;
     }
+    .pagination{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin:50px 0;
+}
+
+.pagination a{
+    padding:10px 16px;
+    border-radius:8px;
+    background:#178dc9;
+    color:white;
+    text-decoration:none;
+    font-weight:600;
+}
+
+.pagination a:hover{
+    background:#0b6ca0;
+}
 }
