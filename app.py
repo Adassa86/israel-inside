@@ -1078,7 +1078,17 @@ def index():
     if contract:
         query = query.filter(Job.contract_type == contract)
 
-    jobs = query.order_by(Job.created_at.desc()).all()
+    page = request.args.get("page", 1, type=int)
+
+pagination = query.order_by(
+    Job.created_at.desc()
+).paginate(
+    page=page,
+    per_page=20,
+    error_out=False
+)
+
+jobs = pagination.items
 
     advertisements = (
         Advertisement.query
