@@ -1,4 +1,4 @@
-from datetime import datetime
+
 from functools import wraps
 import os
 import re
@@ -1047,12 +1047,12 @@ def index():
     search = request.args.get("search", "").strip()
     city = request.args.get("city", "").strip()
     contract = request.args.get("contract", "").strip()
+    page = request.args.get("page", 1, type=int)
 
-    query = Job.query.filter_by(published=True)
+    query = Job.query.filter(Job.published.is_(True))
 
     if search:
         search_pattern = f"%{search}%"
-
         query = query.filter(
             db.or_(
                 Job.title.ilike(search_pattern),
@@ -1064,7 +1064,6 @@ def index():
 
     if city:
         city_pattern = f"%{city}%"
-
         query = query.filter(
             db.or_(
                 Job.city == city,
@@ -1078,17 +1077,16 @@ def index():
     if contract:
         query = query.filter(Job.contract_type == contract)
 
-    page = request.args.get("page", 1, type=int)
-
-    pagination = query.order_by(
-        Job.created_at.desc()
-    ).paginate(
-        page=page,
-        per_page=20,
-        error_out=False
-)
-
-jobs = pagination.items
+    pagination = (
+        query
+        .order_by(Job.created_at.desc())
+        .paginate(
+            page=page,
+            per_page=12,
+            error_out=False,
+        )
+    )
+    jobs = pagination.items
 
     advertisements = (
         Advertisement.query
@@ -1099,6 +1097,7 @@ jobs = pagination.items
         )
         .all()
     )
+
     cities = [
         row[0]
         for row in (
@@ -1132,18 +1131,13 @@ jobs = pagination.items
     )
 
     all_cities = set(cities)
-
     for row in shuttle_city_rows:
         for shuttle_city in row[0].split(","):
             cleaned_city = shuttle_city.strip()
-
             if cleaned_city:
                 all_cities.add(cleaned_city)
 
-    cities = sorted(
-        all_cities,
-        key=lambda value: value.casefold(),
-    )
+    cities = sorted(all_cities, key=lambda value: value.casefold())
 
     contracts = [
         row[0]
@@ -1169,6 +1163,9 @@ jobs = pagination.items
         selected_search=search,
         selected_city=city,
         selected_contract=contract,
+        search=search,
+        city=city,
+        contract=contract,
         pagination=pagination,
     )
 
