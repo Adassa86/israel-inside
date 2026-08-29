@@ -695,6 +695,95 @@ Offres d’emploi — Israël Inside
         }
     }
 
+
+    /* Pagination Israël Inside — noms uniques pour éviter les conflits */
+    .ii-pager {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        width: calc(100% - 24px) !important;
+        max-width: 760px !important;
+        margin: 0 auto 70px !important;
+        padding: 14px !important;
+        overflow: visible !important;
+        border: 1px solid #d9e7f1 !important;
+        border-radius: 18px !important;
+        background: #ffffff !important;
+        box-shadow: 0 15px 40px rgba(7, 59, 111, 0.10) !important;
+    }
+
+    .ii-pager-count {
+        display: block !important;
+        visibility: visible !important;
+        width: 100% !important;
+        margin: 0 0 12px !important;
+        padding: 12px !important;
+        border-radius: 12px !important;
+        background: #eaf5ff !important;
+        color: #073d67 !important;
+        font-weight: 900 !important;
+        text-align: center !important;
+    }
+
+    .ii-pager-buttons {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        width: 100% !important;
+        min-height: 50px !important;
+        gap: 10px !important;
+        overflow: visible !important;
+    }
+
+    .ii-pager-button {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        flex: 1 1 0 !important;
+        width: auto !important;
+        min-width: 0 !important;
+        min-height: 50px !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 12px 10px !important;
+        border: 0 !important;
+        border-radius: 12px !important;
+        background: linear-gradient(135deg, #ffd34e, #ff8a2a) !important;
+        color: #593600 !important;
+        font-size: 15px !important;
+        font-weight: 900 !important;
+        line-height: 1.2 !important;
+        text-align: center !important;
+        text-decoration: none !important;
+        white-space: nowrap !important;
+    }
+
+    .ii-pager-disabled {
+        background: #eef3f6 !important;
+        color: #9aa8b2 !important;
+        cursor: default !important;
+    }
+
+    @media (max-width: 520px) {
+        .ii-pager {
+            width: calc(100% - 16px) !important;
+            margin-bottom: 50px !important;
+            padding: 10px !important;
+        }
+
+        .ii-pager-buttons {
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            gap: 9px !important;
+            min-height: 0 !important;
+        }
+
+        .ii-pager-button {
+            width: 100% !important;
+            min-height: 52px !important;
+        }
+    }
+
 </style>
 
 <section class="employment-hero">
@@ -915,12 +1004,12 @@ Offres d’emploi — Israël Inside
 </section>
 
 {% if pagination and pagination.pages > 1 %}
-<nav class="pagination-mobile-safe" aria-label="Navigation des offres">
-    <div class="pagination-status">
+<nav class="ii-pager" aria-label="Navigation des offres">
+    <div class="ii-pager-count">
         Page {{ pagination.page }} sur {{ pagination.pages }}
     </div>
 
-    <div class="pagination-actions">
+    <div class="ii-pager-buttons">
         {% if pagination.has_prev %}
         <a
             href="{{ url_for(
@@ -930,12 +1019,12 @@ Offres d’emploi — Israël Inside
                 city=selected_city,
                 contract=selected_contract
             ) }}"
-            class="pagination-button"
+            class="ii-pager-button"
         >
             ← Précédent
         </a>
         {% else %}
-        <span class="pagination-button pagination-button-disabled">
+        <span class="ii-pager-button ii-pager-disabled">
             ← Précédent
         </span>
         {% endif %}
@@ -949,12 +1038,12 @@ Offres d’emploi — Israël Inside
                 city=selected_city,
                 contract=selected_contract
             ) }}"
-            class="pagination-button"
+            class="ii-pager-button"
         >
             Suivant →
         </a>
         {% else %}
-        <span class="pagination-button pagination-button-disabled">
+        <span class="ii-pager-button ii-pager-disabled">
             Suivant →
         </span>
         {% endif %}
