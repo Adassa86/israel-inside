@@ -784,6 +784,47 @@ Offres d’emploi — Israël Inside
         }
     }
 
+
+    .ticket-header-left {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .ticket-new {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5px 10px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #ff5a5f, #ff2f3d);
+        color: white;
+        font-size: 10px;
+        font-weight: 900;
+        letter-spacing: .6px;
+        box-shadow: 0 8px 18px rgba(255, 47, 61, .28);
+        animation: newPulse 1.8s ease-in-out infinite;
+        white-space: nowrap;
+    }
+
+    @keyframes newPulse {
+        0%,
+        100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.07);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .ticket-new {
+            animation: none;
+        }
+    }
+
 </style>
 
 <section class="employment-hero">
@@ -872,7 +913,14 @@ Offres d’emploi — Israël Inside
                 {% for job in jobs %}
                 <article class="employment-ticket">
                     <div class="ticket-blue-header">
-                        <span>Poste n°{{ job.reference }}</span>
+                        <div class="ticket-header-left">
+                            <span>Poste n°{{ job.reference }}</span>
+
+                            {% if loop.index <= 10 %}
+                            <span class="ticket-new">🆕 NEW</span>
+                            {% endif %}
+                        </div>
+
                         <span class="ticket-status">Disponible</span>
                     </div>
 
