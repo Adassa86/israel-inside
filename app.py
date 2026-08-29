@@ -89,7 +89,7 @@ class Job(db.Model):
     )
 
     city = db.Column(
-        db.String(100),
+        db.String(250),
         nullable=False,
     )
 
@@ -1008,7 +1008,7 @@ def index():
 
         query = query.filter(
             db.or_(
-                Job.city == city,
+                Job.city.ilike(city_pattern),
                 db.and_(
                     Job.shuttle_available.is_(True),
                     Job.shuttle_cities.ilike(city_pattern),
@@ -1084,26 +1084,15 @@ def index():
         .all()
     )
 
-    cities = [
-        row[0]
-        for row in (
-            db.session.query(Job.city)
-            .filter(
-                Job.published.is_(True),
-                Job.city.isnot(None),
-                Job.city != "",
-                Job.city != "Non précisée",
-                Job.city != "Non spécifiée",
-                Job.city != "À définir",
-                Job.city != "Inconnue",
-                Job.city != "-",
-                Job.city != "N/A",
-            )
-            .distinct()
-            .order_by(Job.city)
-            .all()
+    city_rows = (
+        db.session.query(Job.city)
+        .filter(
+            Job.published.is_(True),
+            Job.city.isnot(None),
+            Job.city != "",
         )
-    ]
+        .all()
+    )
 
     shuttle_city_rows = (
         db.session.query(Job.shuttle_cities)
@@ -1116,13 +1105,44 @@ def index():
         .all()
     )
 
-    all_cities = set(cities)
+    ignored_city_values = {
+        "",
+        "-",
+        "N/A",
+        "Non précisée",
+        "Non précisé",
+        "Non spécifiée",
+        "À définir",
+        "Inconnue",
+    }
+
+    all_cities = set()
+
+    for row in city_rows:
+        raw_cities = row[0] or ""
+
+        for job_city in re.split(r"[,/|;\n]+", raw_cities):
+            cleaned_city = job_city.strip()
+
+            if (
+                cleaned_city
+                and cleaned_city not in ignored_city_values
+            ):
+                all_cities.add(cleaned_city)
 
     for row in shuttle_city_rows:
-        for shuttle_city in row[0].split(","):
+        raw_shuttle_cities = row[0] or ""
+
+        for shuttle_city in re.split(
+            r"[,/|;\n]+",
+            raw_shuttle_cities,
+        ):
             cleaned_city = shuttle_city.strip()
 
-            if cleaned_city:
+            if (
+                cleaned_city
+                and cleaned_city not in ignored_city_values
+            ):
                 all_cities.add(cleaned_city)
 
     cities = sorted(
@@ -1175,13 +1195,30 @@ def job_detail(job_id):
         .first_or_404()
     )
 
-    similar_jobs = (
-        Job.query
-        .filter(
-            Job.published.is_(True),
-            Job.id != job.id,
-            Job.city == job.city,
+    primary_city = next(
+        (
+            city_part.strip()
+            for city_part in re.split(
+                r"[,/|;\n]+",
+                job.city or "",
+            )
+            if city_part.strip()
+        ),
+        "",
+    )
+
+    similar_query = Job.query.filter(
+        Job.published.is_(True),
+        Job.id != job.id,
+    )
+
+    if primary_city:
+        similar_query = similar_query.filter(
+            Job.city.ilike(f"%{primary_city}%")
         )
+
+    similar_jobs = (
+        similar_query
         .order_by(Job.created_at.desc())
         .limit(3)
         .all()
