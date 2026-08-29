@@ -654,46 +654,86 @@ Offres d’emploi — Israël Inside
         }
     }
 
+
+    .pagination-simple {
+        width: min(100% - 28px, 760px);
+        margin: 0 auto 70px;
+        padding: 14px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+        align-items: center;
+        gap: 12px;
+        border: 1px solid #d9e7f1;
+        border-radius: 18px;
+        background: white;
+        box-shadow: 0 15px 40px rgba(7, 59, 111, 0.10);
+    }
+
+    .pagination-nav,
+    .pagination-page {
+        min-height: 46px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        font-weight: 900;
+        text-align: center;
+    }
+
+    .pagination-nav {
+        padding: 10px 16px;
+        background: linear-gradient(135deg, #ffd34e, #ff8a2a);
+        color: #593600;
+        text-decoration: none;
+    }
+
+    .pagination-page {
+        padding: 10px 14px;
+        background: #eaf5ff;
+        color: #073d67;
+        white-space: nowrap;
+    }
+
+    .pagination-disabled {
+        padding: 10px 16px;
+        background: #eef3f6;
+        color: #9aa8b2;
+        cursor: not-allowed;
+    }
+
     @media (max-width: 600px) {
-        .pagination {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-            gap: 8px;
-            width: 100%;
+        .pagination-simple {
+            width: calc(100% - 20px);
+            grid-template-columns: 1fr 1fr;
+            gap: 9px;
+            padding: 10px;
             margin-bottom: 55px;
-            padding: 0 14px;
         }
 
-        .pagination-link,
-        .pagination-ellipsis {
-            min-width: 40px;
-            min-height: 44px;
-            padding: 8px 10px;
-        }
-
-        .pagination > .pagination-link:not(.pagination-prev):not(.pagination-next):not(.pagination-current),
-        .pagination-ellipsis {
-            display: none;
+        .pagination-page {
+            grid-column: 1 / -1;
+            grid-row: 1;
+            width: 100%;
         }
 
         .pagination-prev {
             grid-column: 1;
-            justify-self: stretch;
+            grid-row: 2;
         }
 
-        .pagination-current {
+        .pagination-next {
             grid-column: 2;
+            grid-row: 2;
         }
 
-        .pagination-next {
-            grid-column: 3;
-            justify-self: stretch;
-        }
-
-        .pagination-prev,
-        .pagination-next {
-            white-space: nowrap;
-            text-align: center;
+        .pagination-nav,
+        .pagination-page,
+        .pagination-disabled {
+            width: 100%;
+            min-width: 0;
+            min-height: 48px;
+            padding: 10px 8px;
+            font-size: 14px;
         }
     }
 
@@ -917,7 +957,7 @@ Offres d’emploi — Israël Inside
 </section>
 
 {% if pagination and pagination.pages > 1 %}
-<nav class="pagination" aria-label="Navigation des offres">
+<nav class="pagination pagination-simple" aria-label="Navigation des offres">
     {% if pagination.has_prev %}
     <a
         href="{{ url_for(
@@ -927,36 +967,19 @@ Offres d’emploi — Israël Inside
             city=selected_city,
             contract=selected_contract
         ) }}"
-        class="pagination-link pagination-prev"
+        class="pagination-nav pagination-prev"
     >
         ← Précédent
     </a>
+    {% else %}
+    <span class="pagination-nav pagination-disabled">
+        ← Précédent
+    </span>
     {% endif %}
 
-    {% for p in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
-        {% if p %}
-            {% if p == pagination.page %}
-            <span class="pagination-link pagination-current" aria-current="page">
-                {{ p }}
-            </span>
-            {% else %}
-            <a
-                href="{{ url_for(
-                    'index',
-                    page=p,
-                    search=selected_search,
-                    city=selected_city,
-                    contract=selected_contract
-                ) }}"
-                class="pagination-link"
-            >
-                {{ p }}
-            </a>
-            {% endif %}
-        {% else %}
-        <span class="pagination-ellipsis">…</span>
-        {% endif %}
-    {% endfor %}
+    <span class="pagination-page" aria-current="page">
+        Page {{ pagination.page }} sur {{ pagination.pages }}
+    </span>
 
     {% if pagination.has_next %}
     <a
@@ -967,10 +990,14 @@ Offres d’emploi — Israël Inside
             city=selected_city,
             contract=selected_contract
         ) }}"
-        class="pagination-link pagination-next"
+        class="pagination-nav pagination-next"
     >
         Suivant →
     </a>
+    {% else %}
+    <span class="pagination-nav pagination-disabled">
+        Suivant →
+    </span>
     {% endif %}
 </nav>
 {% endif %}
