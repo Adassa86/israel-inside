@@ -911,7 +911,7 @@ Règles supplémentaires :
         raise ValueError("Le titre est vide après nettoyage.")
 
     if not result.city:
-        result.city = ""
+        raise ValueError("La ville est vide après nettoyage.")
 
     if not result.description:
         raise ValueError(
