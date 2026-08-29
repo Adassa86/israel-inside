@@ -916,8 +916,12 @@ Offres d’emploi — Israël Inside
                         <div class="ticket-header-left">
                             <span>Poste n°{{ job.reference }}</span>
 
-                            {% if loop.index <= 10 %}
-                            <span class="ticket-new">🆕 NEW</span>
+                            {% if job.created_at and now_utc %}
+                                {% set job_age = now_utc - job.created_at %}
+
+                                {% if job_age.days >= 0 and job_age.days < 7 %}
+                                <span class="ticket-new">🆕 NEW</span>
+                                {% endif %}
                             {% endif %}
                         </div>
 
