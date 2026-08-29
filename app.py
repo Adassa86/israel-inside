@@ -247,11 +247,9 @@ class ExtractedJob(BaseModel):
     )
 
     city: str = Field(
-        description=(
-            "Ville ou région du poste exactement en hébreu, "
-            "sans rue ni adresse précise"
-        ),
+        description="Ville ou région du poste en hébreu, sans adresse précise",
     )
+
     contract_type: str = Field(
         default="",
         description="Temps plein, temps partiel ou type de contrat",
@@ -713,7 +711,7 @@ def validate_no_forbidden_content(job: ExtractedJob) -> None:
 # ============================================================
 
 def analyse_raw_job(raw_job: str) -> ExtractedJob:
-    api_key = os.environ.get("OPENAI_API_KEY", "").strip()
+    api_key = os.environ.get("OPENAI_API_KEY")
 
     if not api_key:
         raise RuntimeError(
@@ -743,9 +741,10 @@ def analyse_raw_job(raw_job: str) -> ExtractedJob:
     )
 
     system_prompt = """
-Tu transformes une annonce d'emploi israélienne brute en fiche destinée à des candidats francophones.
+Tu transformes une annonce d'emploi israélienne brute en fiche
+destinée à des candidats francophones.
 
-RÈGLE ABSOLUE :
+RÈGLE ABSOLUE ET PRIORITAIRE :
 
 Les commissions de recrutement ne doivent JAMAIS apparaître.
 
@@ -768,7 +767,7 @@ Tu ne dois jamais écrire, traduire, résumer ou mentionner :
 - שותף מלא ;
 - שותף בעל הבית.
 
-Attention :
+Attention à la différence :
 
 - Une prime versée AU SALARIÉ peut être conservée.
 - Une commission versée AU RECRUTEUR ou À L'AGENCE est interdite.
@@ -776,118 +775,58 @@ Attention :
 Tu dois également supprimer totalement :
 
 - le nom de l'entreprise ;
-- le nom des responsables ;
+- le nom des responsables ou contacts ;
 - les adresses e-mail ;
 - les numéros de téléphone ;
 - les adresses précises ;
 - les numéros de rue ;
 - les informations JobTarget ;
-- les informations destinées aux recruteurs ;
+- les informations sur les agences ;
+- les instructions internes aux recruteurs ;
+- les instructions pour envoyer les candidats ;
 - les commentaires internes ;
-- les symboles et textes SVG.
+- les symboles et textes techniques SVG.
 
-Tu dois conserver uniquement :
+Tu dois conserver uniquement les informations utiles au candidat :
 
 - le numéro du poste ;
-- un titre professionnel naturel en français ;
-- la ville OU la région, conservée en hébreu ;
-- le type de contrat ;
-- les jours de travail ;
-- les horaires ;
-- le salaire ;
-- les primes destinées au salarié ;
-- les avantages ;
+- un titre naturel en français ;
+- la ville ou la région, toujours en hébreu ;
+- le type de poste ;
+- les jours et horaires ;
+- le salaire du salarié ;
+- les primes du salarié ;
+- les repas ;
+- les transports ;
+- les heures supplémentaires ;
 - les missions ;
 - les exigences ;
-- le niveau d'hébreu ;
 - l'expérience ;
-- les informations sur les navettes éventuelles.
+- le niveau d'hébreu si indiqué ;
+- les avantages destinés au salarié ;
+- l'existence éventuelle d'une navette pour les salariés ;
+- les villes exactes de départ desservies par cette navette.
 
-RÈGLES POUR LE LIEU :
+Règles supplémentaires :
 
-RÈGLES POUR LE LIEU :
-
-- Le champ city doit toujours rester en hébreu.
-- Le champ city peut contenir soit une ville, soit une région.
-- Une région est une localisation valide.
-- Ne traduis jamais le nom d'une ville.
-- Ne traduis jamais le nom d'une région.
-- Si une ville est indiquée, conserve uniquement la ville.
-- Si seule une région est indiquée, conserve la région.
-- Si une ville et une région sont indiquées, privilégie la ville.
-- Exemples de régions valides :
-  אזור המרכז
-  אזור השרון
-  אזור השפלה
-  ירושלים והסביבה
-  צפון
-  דרום
-  מרכז
-- Si aucune ville ni région n'est présente, laisse le champ vide.
-- N'écris jamais "Non précisé".
-- N'invente jamais une localisation.
-- Ne conserve jamais une rue ou une adresse.
-
-RÈGLES POUR LE SALAIRE :
-
-Le salaire est une information PRIORITAIRE.
-
-Si un salaire est indiqué, il doit toujours être conservé.
-
-Exemples :
-
-10,000 ₪
-10,000–12,000 ₪
-55 ₪ לשעה
-
-Les primes destinées au salarié doivent également être conservées.
-
-RÈGLES POUR LES HORAIRES :
-
-Les horaires sont prioritaires.
-
-Conserve toujours :
-
-- les jours travaillés ;
-- l'heure de début ;
-- l'heure de fin.
-
-Exemple :
-
-א׳–ה׳
-07:30–17:00
-
-RÈGLES POUR LES EXIGENCES :
-
-Chaque exigence doit être sur une ligne différente.
-
-RÈGLES POUR LES AVANTAGES :
-
-Chaque avantage doit être sur une ligne différente.
-
-RÈGLES POUR LES NAVETTES :
-
-Si une navette est mentionnée :
-
-- shuttle_available = true
-- shuttle_cities doit contenir uniquement les villes de départ.
-
-Ne mets jamais la ville du poste dans shuttle_cities.
-
-Sépare les villes par des virgules.
-
-Si aucune navette n'est clairement mentionnée :
-
-- shuttle_available = false
-- shuttle_cities = ""
-
-RÈGLES GÉNÉRALES :
-
-- N'invente jamais une information.
-- Si le niveau d'hébreu est absent, écris "Non précisé".
-- Si l'expérience est absente, écris "Non précisée".
-- Le titre doit être court et professionnel.
-- N'écris jamais le nom de l'entreprise, même dans la description.
+- N'invente aucune information.
+- Si le niveau d'hébreu est absent, écris « Non précisé ».
+- Si l'expérience est absente, écris « Non précisée ».
+- Le champ city doit toujours être en hébreu.
+- Ne traduis jamais une ville ou une région en français.
+- La ville ne doit contenir aucune rue ou adresse précise.
+- Si une ville et une région sont présentes, privilégie la ville.
+- Si seule une région est indiquée, conserve la région en hébreu.
+- N'écris jamais « Non précisé » dans le champ city.
+- Le titre doit être professionnel, court et compréhensible.
+- Les exigences doivent être séparées par des retours à la ligne.
+- Les avantages doivent être séparés par des retours à la ligne.
+- N'écris jamais le nom de la société, même dans la description.
+- Si aucune navette n'est clairement mentionnée, mets shuttle_available à false.
+- Ne confonds jamais la ville du poste avec les villes de départ de la navette.
+- Si une navette existe, mets uniquement ses villes de départ dans shuttle_cities.
+- Sépare les villes de navette par des virgules.
+- N'invente jamais une ville desservie.
 """
 
     try:
@@ -1047,12 +986,14 @@ def index():
     search = request.args.get("search", "").strip()
     city = request.args.get("city", "").strip()
     contract = request.args.get("contract", "").strip()
+    hebrew = request.args.get("hebrew", "").strip()
     page = request.args.get("page", 1, type=int)
 
-    query = Job.query.filter(Job.published.is_(True))
+    query = Job.query.filter_by(published=True)
 
     if search:
         search_pattern = f"%{search}%"
+
         query = query.filter(
             db.or_(
                 Job.title.ilike(search_pattern),
@@ -1064,6 +1005,7 @@ def index():
 
     if city:
         city_pattern = f"%{city}%"
+
         query = query.filter(
             db.or_(
                 Job.city == city,
@@ -1077,6 +1019,49 @@ def index():
     if contract:
         query = query.filter(Job.contract_type == contract)
 
+    if hebrew:
+        if hebrew == "none":
+            query = query.filter(
+                db.or_(
+                    Job.hebrew_level.ilike("%sans%"),
+                    Job.hebrew_level.ilike("%non requis%"),
+                    Job.hebrew_level.ilike("%aucun%"),
+                )
+            )
+
+        elif hebrew == "basic":
+            query = query.filter(
+                db.or_(
+                    Job.hebrew_level.ilike("%début%"),
+                    Job.hebrew_level.ilike("%base%"),
+                    Job.hebrew_level.ilike("%notions%"),
+                )
+            )
+
+        elif hebrew == "intermediate":
+            query = query.filter(
+                db.or_(
+                    Job.hebrew_level.ilike("%interm%"),
+                    Job.hebrew_level.ilike("%moyen%"),
+                )
+            )
+
+        elif hebrew == "advanced":
+            query = query.filter(
+                db.and_(
+                    Job.hebrew_level.isnot(None),
+                    Job.hebrew_level != "",
+                    ~Job.hebrew_level.ilike("%sans%"),
+                    ~Job.hebrew_level.ilike("%non requis%"),
+                    ~Job.hebrew_level.ilike("%aucun%"),
+                    ~Job.hebrew_level.ilike("%début%"),
+                    ~Job.hebrew_level.ilike("%base%"),
+                    ~Job.hebrew_level.ilike("%notions%"),
+                    ~Job.hebrew_level.ilike("%interm%"),
+                    ~Job.hebrew_level.ilike("%moyen%"),
+                )
+            )
+
     pagination = (
         query
         .order_by(Job.created_at.desc())
@@ -1086,6 +1071,7 @@ def index():
             error_out=False,
         )
     )
+
     jobs = pagination.items
 
     advertisements = (
@@ -1131,13 +1117,18 @@ def index():
     )
 
     all_cities = set(cities)
+
     for row in shuttle_city_rows:
         for shuttle_city in row[0].split(","):
             cleaned_city = shuttle_city.strip()
+
             if cleaned_city:
                 all_cities.add(cleaned_city)
 
-    cities = sorted(all_cities, key=lambda value: value.casefold())
+    cities = sorted(
+        all_cities,
+        key=lambda value: value.casefold(),
+    )
 
     contracts = [
         row[0]
@@ -1163,11 +1154,11 @@ def index():
         selected_search=search,
         selected_city=city,
         selected_contract=contract,
-        search=search,
-        city=city,
-        contract=contract,
+        selected_hebrew=hebrew,
         pagination=pagination,
+        now_utc=datetime.utcnow(),
     )
+
 
 
 # ============================================================
