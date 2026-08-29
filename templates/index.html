@@ -920,21 +920,27 @@ Offres d’emploi — Israël Inside
                                 {% set job_age_seconds = (now_utc - job.created_at).total_seconds() %}
 
                                 {% if job_age_seconds >= 0 and job_age_seconds < 604800 %}
-                                <span style="
-display:inline-flex;
-align-items:center;
-padding:5px 10px;
+                                <span
+style="
+display:inline-block;
 margin-left:8px;
-border-radius:999px;
-background:#4EA8DE;
-color:#fff;
-font-size:12px;
-font-weight:700;
-letter-spacing:.4px;
+font-size:13px;
+font-weight:900;
+color:#ff9800;
 text-transform:uppercase;
-">
-🆕 NEW
+animation:blink 1s infinite;
+"
+>
+✨ NEW
 </span>
+
+<style>
+@keyframes blink{
+    0%{opacity:1;}
+    50%{opacity:.2;}
+    100%{opacity:1;}
+}
+</style>
                                 {% endif %}
                             {% endif %}
                         </div>
