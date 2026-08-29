@@ -653,34 +653,77 @@ Offres d’emploi — Israël Inside
             padding: 0 22px 22px;
         }
     }
+
+    @media (max-width: 600px) {
+        .pagination {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+            gap: 8px;
+            width: 100%;
+            margin-bottom: 55px;
+            padding: 0 14px;
+        }
+
+        .pagination-link,
+        .pagination-ellipsis {
+            min-width: 40px;
+            min-height: 44px;
+            padding: 8px 10px;
+        }
+
+        .pagination > .pagination-link:not(.pagination-prev):not(.pagination-next):not(.pagination-current),
+        .pagination-ellipsis {
+            display: none;
+        }
+
+        .pagination-prev {
+            grid-column: 1;
+            justify-self: stretch;
+        }
+
+        .pagination-current {
+            grid-column: 2;
+        }
+
+        .pagination-next {
+            grid-column: 3;
+            justify-self: stretch;
+        }
+
+        .pagination-prev,
+        .pagination-next {
+            white-space: nowrap;
+            text-align: center;
+        }
+    }
+
 </style>
 
 <section class="employment-hero">
     <div class="container employment-hero-grid">
         <div>
-            <span class="employment-label">EMPLOI EN ISRAËL</span>
+            <span class="employment-label">VOTRE INTÉGRATION COMMENCE ICI</span>
 
             <h1>
-                Trouvez le poste
-                <span>qui vous correspond.</span>
+                Construisez votre avenir
+                <span>en Israël.</span>
             </h1>
 
             <p>
-                Découvrez des offres traduites, simplifiées et présentées
-                clairement pour faciliter votre recherche d’emploi en Israël.
+                Un emploi, un meilleur hébreu, une intégration réussie.
             </p>
         </div>
 
         <div class="hero-employment-card">
-            <span>NOUVELLES OPPORTUNITÉS</span>
+            <span>INTÉGRATION EN ISRAËL</span>
 
             <h2>
-                Des offres claires, sans informations inutiles.
+                Le travail est le meilleur professeur d'hébreu.
             </h2>
 
             <p>
-                Ville, horaires, salaire, expérience et conditions :
-                tout ce qu’il faut savoir avant de postuler.
+                L'immersion quotidienne est la façon la plus efficace
+                d'apprendre la langue et de réussir son intégration en Israël.
             </p>
         </div>
     </div>
@@ -884,7 +927,7 @@ Offres d’emploi — Israël Inside
             city=selected_city,
             contract=selected_contract
         ) }}"
-        class="pagination-link"
+        class="pagination-link pagination-prev"
     >
         ← Précédent
     </a>
@@ -924,7 +967,7 @@ Offres d’emploi — Israël Inside
             city=selected_city,
             contract=selected_contract
         ) }}"
-        class="pagination-link"
+        class="pagination-link pagination-next"
     >
         Suivant →
     </a>
