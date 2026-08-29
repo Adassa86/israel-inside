@@ -917,9 +917,9 @@ Offres d’emploi — Israël Inside
                             <span>Poste n°{{ job.reference }}</span>
 
                             {% if job.created_at and now_utc %}
-                                {% set job_age = now_utc - job.created_at %}
+                                {% set job_age_seconds = (now_utc - job.created_at).total_seconds() %}
 
-                                {% if job_age.days >= 0 and job_age.days < 7 %}
+                                {% if job_age_seconds >= 0 and job_age_seconds < 604800 %}
                                 <span class="ticket-new">🆕 NEW</span>
                                 {% endif %}
                             {% endif %}
