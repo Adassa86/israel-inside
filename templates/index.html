@@ -2,6 +2,355 @@
 
 {% block title %}
 Offres d’emploi — Israël Inside
+
+<script>
+(() => {
+    const cityTranslations = {
+        "ashkelon": "אשקלון",
+        "achkelon": "אשקלון",
+        "אשקלון": "אשקלון",
+        "ashdod": "אשדוד",
+        "אשדוד": "אשדוד",
+        "jerusalem": "ירושלים",
+        "jérusalem": "ירושלים",
+        "yerushalayim": "ירושלים",
+        "ירושלים": "ירושלים",
+        "tel aviv": "תל אביב",
+        "tel-aviv": "תל אביב",
+        "תל אביב": "תל אביב",
+        "haifa": "חיפה",
+        "haïfa": "חיפה",
+        "חיפה": "חיפה",
+        "netanya": "נתניה",
+        "natanya": "נתניה",
+        "נתניה": "נתניה",
+        "beer sheva": "באר שבע",
+        "be'er sheva": "באר שבע",
+        "beersheva": "באר שבע",
+        "béer shéva": "באר שבע",
+        "באר שבע": "באר שבע",
+        "rishon lezion": "ראשון לציון",
+        "rishon le zion": "ראשון לציון",
+        "ראשון לציון": "ראשון לציון",
+        "petah tikva": "פתח תקווה",
+        "petah-tikva": "פתח תקווה",
+        "פתח תקווה": "פתח תקווה",
+        "rehovot": "רחובות",
+        "רחובות": "רחובות",
+        "holon": "חולון",
+        "חולון": "חולון",
+        "bat yam": "בת ים",
+        "בת ים": "בת ים",
+        "ramat gan": "רמת גן",
+        "רמת גן": "רמת גן",
+        "bnei brak": "בני ברק",
+        "bene brak": "בני ברק",
+        "בני ברק": "בני ברק",
+        "kfar saba": "כפר סבא",
+        "כפר סבא": "כפר סבא",
+        "herzliya": "הרצליה",
+        "hertzliya": "הרצליה",
+        "הרצליה": "הרצליה",
+        "raanana": "רעננה",
+        "ra'anana": "רעננה",
+        "רעננה": "רעננה",
+        "modiin": "מודיעין",
+        "modi'in": "מודיעין",
+        "מודיעין": "מודיעין",
+        "lod": "לוד",
+        "לוד": "לוד",
+        "ramla": "רמלה",
+        "רמלה": "רמלה",
+        "yavne": "יבנה",
+        "יבנה": "יבנה",
+        "gedera": "גדרה",
+        "גדרה": "גדרה",
+        "kiryat gat": "קריית גת",
+        "קרית גת": "קריית גת",
+        "קריית גת": "קריית גת",
+        "kiryat malachi": "קריית מלאכי",
+        "קרית מלאכי": "קריית מלאכי",
+        "קריית מלאכי": "קריית מלאכי",
+        "beit shemesh": "בית שמש",
+        "בית שמש": "בית שמש",
+        "atlit": "עתלית",
+        "עתלית": "עתלית",
+        "tirat carmel": "טירת כרמל",
+        "tirat karmel": "טירת כרמל",
+        "טירת כרמל": "טירת כרמל",
+        "hadera": "חדרה",
+        "חדרה": "חדרה",
+        "afula": "עפולה",
+        "עפולה": "עפולה",
+        "nazareth": "נצרת",
+        "natzrat": "נצרת",
+        "נצרת": "נצרת",
+        "tiberias": "טבריה",
+        "tibériade": "טבריה",
+        "טבריה": "טבריה",
+        "eilat": "אילת",
+        "אילת": "אילת",
+        "dimona": "דימונה",
+        "דימונה": "דימונה",
+        "yeruham": "ירוחם",
+        "ירוחם": "ירוחם",
+        "sderot": "שדרות",
+        "שדרות": "שדרות",
+        "ofakim": "אופקים",
+        "אופקים": "אופקים",
+        "nahariya": "נהריה",
+        "naharia": "נהריה",
+        "נהריה": "נהריה",
+        "akko": "עכו",
+        "acre": "עכו",
+        "עכו": "עכו",
+        "carmiel": "כרמיאל",
+        "karmiel": "כרמיאל",
+        "כרמיאל": "כרמיאל",
+        "zefat": "צפת",
+        "safed": "צפת",
+        "צפת": "צפת",
+        "gush dan": "גוש דן",
+        "גוש דן": "גוש דן",
+        "centre": "מרכז",
+        "center": "מרכז",
+        "מרכז": "מרכז",
+        "nord": "צפון",
+        "north": "צפון",
+        "צפון": "צפון",
+        "sud": "דרום",
+        "south": "דרום",
+        "דרום": "דרום",
+        "région centre": "אזור המרכז",
+        "region centre": "אזור המרכז",
+        "אזור המרכז": "אזור המרכז",
+        "région du sharon": "אזור השרון",
+        "region du sharon": "אזור השרון",
+        "אזור השרון": "אזור השרון",
+        "région de la shfela": "אזור השפלה",
+        "region de la shfela": "אזור השפלה",
+        "אזור השפלה": "אזור השפלה"
+    };
+
+    const normalize = (value) =>
+        (value || "")
+            .trim()
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/\s+/g, " ");
+
+    const translateCity = (value) => {
+        const original = (value || "").trim();
+        const normalized = normalize(original);
+
+        if (cityTranslations[normalized]) {
+            return cityTranslations[normalized];
+        }
+
+        const parts = original
+            .split(/[,/|–—-]+/)
+            .map((part) => part.trim())
+            .filter(Boolean);
+
+        if (parts.length > 1) {
+            return parts
+                .map((part) => cityTranslations[normalize(part)] || part)
+                .join(" / ");
+        }
+
+        return original;
+    };
+
+    document.querySelectorAll(".employment-city[data-city]").forEach((element) => {
+        const translated = translateCity(element.dataset.city);
+        element.textContent = `📍 ${translated}`;
+        element.setAttribute("dir", "rtl");
+    });
+
+    const citySelect = document.getElementById("city");
+
+    if (citySelect) {
+        Array.from(citySelect.options).forEach((option, index) => {
+            if (index === 0 || !option.value) return;
+            option.textContent = translateCity(option.textContent);
+            option.setAttribute("dir", "rtl");
+        });
+    }
+
+    document.querySelectorAll(".employment-facts strong").forEach((element) => {
+        const value = normalize(element.textContent);
+
+        if (
+            value.includes("hebreu") ||
+            value.includes("hebrew") ||
+            value.includes("עברית")
+        ) {
+            let className = "hebrew-level-advanced";
+            let icon = "🔴";
+
+            if (
+                value.includes("sans") ||
+                value.includes("non requis") ||
+                value.includes("aucun")
+            ) {
+                className = "hebrew-level-none";
+                icon = "🟢";
+            } else if (
+                value.includes("debut") ||
+                value.includes("base") ||
+                value.includes("notions")
+            ) {
+                className = "hebrew-level-basic";
+                icon = "🟡";
+            } else if (
+                value.includes("interm") ||
+                value.includes("moyen")
+            ) {
+                className = "hebrew-level-intermediate";
+                icon = "🟠";
+            }
+
+            element.classList.add("hebrew-level-badge", className);
+
+            if (!element.textContent.trim().startsWith(icon)) {
+                element.textContent = `${icon} ${element.textContent.trim()}`;
+            }
+        }
+    });
+
+    const favoritesKey = "israelInsideFavorites";
+    const favoriteButtons = Array.from(
+        document.querySelectorAll(".favorite-button")
+    );
+    const favoritesToggle = document.getElementById("favoritesToggle");
+    const cards = Array.from(
+        document.querySelectorAll(".employment-ticket")
+    );
+    const searchInput = document.getElementById("search");
+    const emptyState = document.getElementById("clientFilterEmpty");
+    let favoritesOnly = false;
+
+    const getFavorites = () => {
+        try {
+            return new Set(
+                JSON.parse(localStorage.getItem(favoritesKey) || "[]")
+            );
+        } catch {
+            return new Set();
+        }
+    };
+
+    const saveFavorites = (favorites) => {
+        localStorage.setItem(
+            favoritesKey,
+            JSON.stringify(Array.from(favorites))
+        );
+    };
+
+    const refreshFavorites = () => {
+        const favorites = getFavorites();
+
+        favoriteButtons.forEach((button) => {
+            const active = favorites.has(button.dataset.favoriteId);
+
+            button.classList.toggle("is-favorite", active);
+            button.textContent = active ? "♥" : "♡";
+            button.title = active
+                ? "Retirer des favoris"
+                : "Ajouter aux favoris";
+        });
+    };
+
+    const applyClientFilters = () => {
+        const query = normalize(searchInput?.value);
+        const favorites = getFavorites();
+        let visibleCount = 0;
+
+        cards.forEach((card) => {
+            const searchText = normalize(card.dataset.searchText);
+            const translatedCityElement =
+                card.querySelector(".employment-city");
+            const translatedCity = normalize(
+                translatedCityElement?.textContent
+            );
+
+            const matchesSearch =
+                !query ||
+                searchText.includes(query) ||
+                translatedCity.includes(query);
+
+            const matchesFavorites =
+                !favoritesOnly ||
+                favorites.has(card.dataset.jobId);
+
+            const visible = matchesSearch && matchesFavorites;
+            card.classList.toggle("is-hidden", !visible);
+
+            if (visible) visibleCount += 1;
+        });
+
+        emptyState?.classList.toggle(
+            "is-visible",
+            visibleCount === 0
+        );
+    };
+
+    favoriteButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            const favorites = getFavorites();
+            const id = button.dataset.favoriteId;
+
+            if (favorites.has(id)) {
+                favorites.delete(id);
+            } else {
+                favorites.add(id);
+            }
+
+            saveFavorites(favorites);
+            refreshFavorites();
+            applyClientFilters();
+        });
+    });
+
+    favoritesToggle?.addEventListener("click", () => {
+        favoritesOnly = !favoritesOnly;
+        favoritesToggle.classList.toggle(
+            "is-active",
+            favoritesOnly
+        );
+        favoritesToggle.textContent = favoritesOnly
+            ? "♥ Afficher toutes les offres"
+            : "♡ Mes favoris";
+        applyClientFilters();
+    });
+
+    searchInput?.addEventListener("input", applyClientFilters);
+
+    refreshFavorites();
+    applyClientFilters();
+
+    document.querySelectorAll(".ii-pager-button").forEach((link) => {
+        if (link.tagName !== "A") return;
+
+        link.addEventListener("click", () => {
+            sessionStorage.setItem("israelInsideGoTop", "1");
+        });
+    });
+
+    if (sessionStorage.getItem("israelInsideGoTop") === "1") {
+        sessionStorage.removeItem("israelInsideGoTop");
+
+        window.setTimeout(() => {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        }, 120);
+    }
+})();
+</script>
+
 {% endblock %}
 
 {% block content %}
@@ -784,6 +1133,116 @@ Offres d’emploi — Israël Inside
         }
     }
 
+
+    .ticket-header-actions,
+    .employment-heading-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .ticket-header-actions {
+        margin-left: auto;
+    }
+
+    .favorite-button {
+        width: 34px;
+        height: 34px;
+        display: inline-grid;
+        place-items: center;
+        flex: 0 0 34px;
+        border: 1px solid rgba(255,255,255,.35);
+        border-radius: 50%;
+        background: rgba(255,255,255,.15);
+        color: white;
+        font-size: 21px;
+        line-height: 1;
+        cursor: pointer;
+    }
+
+    .favorite-button.is-favorite {
+        background: #fff3b8;
+        color: #c65000;
+    }
+
+    .favorites-toggle {
+        min-height: 42px;
+        padding: 9px 14px;
+        border: 1px solid #d7e6ef;
+        border-radius: 12px;
+        background: white;
+        color: #0f5aa6;
+        font-weight: 900;
+        cursor: pointer;
+    }
+
+    .favorites-toggle.is-active {
+        background: linear-gradient(135deg, #ffd34e, #ff8a2a);
+        border-color: transparent;
+        color: #593600;
+    }
+
+    .employment-ticket.is-hidden {
+        display: none !important;
+    }
+
+    .hebrew-level-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 9px;
+        border-radius: 999px;
+        font-size: 12px !important;
+    }
+
+    .hebrew-level-none {
+        background: #e8f8ee;
+    }
+
+    .hebrew-level-basic {
+        background: #fff8d6;
+    }
+
+    .hebrew-level-intermediate {
+        background: #fff0dd;
+    }
+
+    .hebrew-level-advanced {
+        background: #ffe5e5;
+    }
+
+    .client-filter-empty {
+        display: none;
+        grid-column: 1 / -1;
+        padding: 35px 20px;
+        border: 1px dashed #d9e7f1;
+        border-radius: 20px;
+        background: white;
+        color: #6e7f8d;
+        text-align: center;
+    }
+
+    .client-filter-empty.is-visible {
+        display: block;
+    }
+
+    @media (max-width: 850px) {
+        .employment-heading-actions {
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+
+    @media (max-width: 520px) {
+        .employment-heading-actions {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .favorites-toggle {
+            width: 100%;
+        }
+    }
+
 </style>
 
 <section class="employment-hero">
@@ -822,7 +1281,7 @@ Offres d’emploi — Israël Inside
         <form method="GET" class="filters-card">
             <div class="filter-field">
                 <label for="search">Rechercher un métier</label>
-                <input id="search" type="search" name="search" value="{{ selected_search }}" placeholder="Cariste, administratif, chauffeur...">
+                <input id="search" type="search" name="search" autocomplete="off" value="{{ selected_search }}" placeholder="Cariste, administratif, chauffeur...">
             </div>
 
             <div class="filter-field">
@@ -862,24 +1321,48 @@ Offres d’emploi — Israël Inside
                 <h2>Offres disponibles</h2>
             </div>
 
-            <p class="employment-count">
-                {{ pagination.total }} offre{{ "s" if pagination.total != 1 else "" }}
-            </p>
+            <div class="employment-heading-actions">
+                <button type="button" id="favoritesToggle" class="favorites-toggle">
+                    ♡ Mes favoris
+                </button>
+
+                <p class="employment-count">
+                    {{ pagination.total }} offre{{ "s" if pagination.total != 1 else "" }}
+                </p>
+            </div>
         </div>
 
         <div class="employment-layout">
             <div class="employment-grid">
                 {% for job in jobs %}
-                <article class="employment-ticket">
+                <article
+                    class="employment-ticket"
+                    data-job-id="{{ job.id }}"
+                    data-search-text="{{ (job.title ~ ' ' ~ job.city ~ ' ' ~ job.description ~ ' ' ~ job.requirements ~ ' ' ~ job.hebrew_level)|lower }}"
+                    data-hebrew-level="{{ (job.hebrew_level or '')|lower }}"
+                >
                     <div class="ticket-blue-header">
                         <span>Poste n°{{ job.reference }}</span>
-                        <span class="ticket-status">Disponible</span>
+
+                        <div class="ticket-header-actions">
+                            <button
+                                type="button"
+                                class="favorite-button"
+                                data-favorite-id="{{ job.id }}"
+                                aria-label="Ajouter aux favoris"
+                                title="Ajouter aux favoris"
+                            >
+                                ♡
+                            </button>
+
+                            <span class="ticket-status">Disponible</span>
+                        </div>
                     </div>
 
                     <div class="employment-ticket-body">
                         <h3>{{ job.title }}</h3>
                         {% if job.city %}
-<p class="employment-city">📍 {{ job.city }}</p>
+<p class="employment-city" data-city="{{ job.city }}">📍 {{ job.city }}</p>
 {% endif %}
 
                         <div class="employment-tags">
@@ -951,6 +1434,10 @@ Offres d’emploi — Israël Inside
                     <p>Modifiez votre recherche ou effacez les filtres.</p>
                 </div>
                 {% endfor %}
+
+                <div id="clientFilterEmpty" class="client-filter-empty">
+                    Aucune offre visible avec cette recherche sur cette page.
+                </div>
             </div>
 
             {% if advertisements %}
