@@ -535,33 +535,6 @@ Offres d’emploi — Israël Inside
         margin-left: 4px;
     }
 
-    .pagination {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 9px;
-        margin: 0 auto 75px;
-        padding: 0 18px;
-    }
-
-    .pagination-link,
-    .pagination-ellipsis {
-        min-width: 42px;
-        min-height: 42px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 8px 13px;
-        border: 1px solid #d6e5ef;
-        border-radius: 12px;
-        background: white;
-        color: #0f5aa6;
-        font-weight: 900;
-        text-decoration: none;
-        box-shadow: 0 8px 22px rgba(7, 59, 111, 0.08);
-    }
-
     .pagination-link {
         transition:
             transform 0.2s ease,
@@ -655,85 +628,70 @@ Offres d’emploi — Israël Inside
     }
 
 
-    .pagination-simple {
-        width: min(100% - 28px, 760px);
+    .pagination-mobile-safe {
+        width: min(100% - 24px, 760px);
         margin: 0 auto 70px;
         padding: 14px;
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-        align-items: center;
-        gap: 12px;
         border: 1px solid #d9e7f1;
         border-radius: 18px;
-        background: white;
+        background: #ffffff;
         box-shadow: 0 15px 40px rgba(7, 59, 111, 0.10);
     }
 
-    .pagination-nav,
-    .pagination-page {
-        min-height: 46px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
+    .pagination-status {
+        width: 100%;
+        margin-bottom: 12px;
+        padding: 12px;
         border-radius: 12px;
+        background: #eaf5ff;
+        color: #073d67;
         font-weight: 900;
         text-align: center;
     }
 
-    .pagination-nav {
-        padding: 10px 16px;
-        background: linear-gradient(135deg, #ffd34e, #ff8a2a);
-        color: #593600;
-        text-decoration: none;
+    .pagination-actions {
+        display: flex;
+        gap: 10px;
+        width: 100%;
     }
 
-    .pagination-page {
-        padding: 10px 14px;
-        background: #eaf5ff;
-        color: #073d67;
+    .pagination-button {
+        flex: 1 1 0;
+        min-width: 0;
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 14px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #ffd34e, #ff8a2a);
+        color: #593600;
+        font-weight: 900;
+        text-align: center;
+        text-decoration: none;
         white-space: nowrap;
     }
 
-    .pagination-disabled {
-        padding: 10px 16px;
+    .pagination-button-disabled {
         background: #eef3f6;
         color: #9aa8b2;
         cursor: not-allowed;
     }
 
-    @media (max-width: 600px) {
-        .pagination-simple {
-            width: calc(100% - 20px);
-            grid-template-columns: 1fr 1fr;
-            gap: 9px;
+    @media (max-width: 520px) {
+        .pagination-mobile-safe {
+            width: calc(100% - 16px);
             padding: 10px;
-            margin-bottom: 55px;
+            margin-bottom: 50px;
         }
 
-        .pagination-page {
-            grid-column: 1 / -1;
-            grid-row: 1;
+        .pagination-actions {
+            flex-direction: column;
+        }
+
+        .pagination-button {
             width: 100%;
-        }
-
-        .pagination-prev {
-            grid-column: 1;
-            grid-row: 2;
-        }
-
-        .pagination-next {
-            grid-column: 2;
-            grid-row: 2;
-        }
-
-        .pagination-nav,
-        .pagination-page,
-        .pagination-disabled {
-            width: 100%;
-            min-width: 0;
-            min-height: 48px;
-            padding: 10px 8px;
-            font-size: 14px;
+            min-height: 50px;
         }
     }
 
@@ -957,48 +915,50 @@ Offres d’emploi — Israël Inside
 </section>
 
 {% if pagination and pagination.pages > 1 %}
-<nav class="pagination pagination-simple" aria-label="Navigation des offres">
-    {% if pagination.has_prev %}
-    <a
-        href="{{ url_for(
-            'index',
-            page=pagination.prev_num,
-            search=selected_search,
-            city=selected_city,
-            contract=selected_contract
-        ) }}"
-        class="pagination-nav pagination-prev"
-    >
-        ← Précédent
-    </a>
-    {% else %}
-    <span class="pagination-nav pagination-prev pagination-disabled">
-        ← Précédent
-    </span>
-    {% endif %}
-
-    <span class="pagination-page" aria-current="page">
+<nav class="pagination-mobile-safe" aria-label="Navigation des offres">
+    <div class="pagination-status">
         Page {{ pagination.page }} sur {{ pagination.pages }}
-    </span>
+    </div>
 
-    {% if pagination.has_next %}
-    <a
-        href="{{ url_for(
-            'index',
-            page=pagination.next_num,
-            search=selected_search,
-            city=selected_city,
-            contract=selected_contract
-        ) }}"
-        class="pagination-nav pagination-next"
-    >
-        Suivant →
-    </a>
-    {% else %}
-    <span class="pagination-nav pagination-next pagination-disabled">
-        Suivant →
-    </span>
-    {% endif %}
+    <div class="pagination-actions">
+        {% if pagination.has_prev %}
+        <a
+            href="{{ url_for(
+                'index',
+                page=pagination.prev_num,
+                search=selected_search,
+                city=selected_city,
+                contract=selected_contract
+            ) }}"
+            class="pagination-button"
+        >
+            ← Précédent
+        </a>
+        {% else %}
+        <span class="pagination-button pagination-button-disabled">
+            ← Précédent
+        </span>
+        {% endif %}
+
+        {% if pagination.has_next %}
+        <a
+            href="{{ url_for(
+                'index',
+                page=pagination.next_num,
+                search=selected_search,
+                city=selected_city,
+                contract=selected_contract
+            ) }}"
+            class="pagination-button"
+        >
+            Suivant →
+        </a>
+        {% else %}
+        <span class="pagination-button pagination-button-disabled">
+            Suivant →
+        </span>
+        {% endif %}
+    </div>
 </nav>
 {% endif %}
 
