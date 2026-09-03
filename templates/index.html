@@ -876,16 +876,7 @@ Offres d’emploi — Israël Inside
                 </select>
             </div>
 
-            <div class="filter-field">
-                <label for="contract">Type de poste</label>
-                <select id="contract" name="contract">
-                    <option value="">Tous les types</option>
-                    {% for contract in contracts %}
-                    <option value="{{ contract }}" {% if selected_contract == contract %}selected{% endif %}>{{ contract }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
+         
             <button type="submit" class="filter-button">Rechercher</button>
         </form>
 
